@@ -1,6 +1,6 @@
 -- modifiable variables
 local reactorSide = "back"
-local fluxgateSide = "left"
+local fluxgateSide = "right"
 
 local targetStrength = 50
 local addOutput = 50
