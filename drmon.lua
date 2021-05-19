@@ -1,8 +1,9 @@
 -- modifiable variables
 local reactorSide = "back"
-local fluxgateSide = "right"
+local fluxgateSide = "left"
 
 local targetStrength = 50
+local addOutput = 50
 local maxTemperature = 8000
 local safeTemperature = 3000
 local lowestFieldPercent = 15
@@ -15,6 +16,8 @@ os.loadAPI("lib/f")
 local version = "0.25"
 -- toggleable via the monitor, use our algorithm to achieve our target field strength or let the user tweak it
 local autoInputGate = 1
+local autoOutputGate = 0
+local curOutputGate = 222000
 local curInputGate = 222000
 
 -- monitor 
@@ -109,35 +112,45 @@ function buttons()
     end
 
     --Match Output and Generation
-    if yPos == 8 and xPos == 14 then
+    if yPos == 8 and xPos == 16 then
       fluxgate.setSignalLowFlow(ri.generationRate)
     end
 
     -- output gate controls
     -- 2-4 = -1000, 6-9 = -10000, 10-12,8 = -100000
     -- 17-19 = +1000, 21-23 = +10000, 25-27 = +100000
-    if yPos == 8 then
-      local cFlow = fluxgate.getSignalLowFlow()
+    if yPos == 8 and autoOutputGate == 0 and xPos ~= 13 and xPos ~= 14 then
+      curOutputGate = fluxgate.getSignalLowFlow()
       if xPos >= 2 and xPos <= 4 then
-        cFlow = cFlow-1000
+        curOutputGate = curOutputGate-1000
       elseif xPos >= 6 and xPos <= 9 then
-        cFlow = cFlow-10000
+        curOutputGate = curOutputGate-10000
       elseif xPos >= 10 and xPos <= 12 then
-        cFlow = cFlow-100000
+        curOutputGate = curOutputGate-100000
       elseif xPos >= 17 and xPos <= 19 then
-        cFlow = cFlow+100000
+        curOutputGate = curOutputGate+100000
       elseif xPos >= 21 and xPos <= 23 then
-        cFlow = cFlow+10000
+        curOutputGate = curOutputGate+10000
       elseif xPos >= 25 and xPos <= 27 then
-        cFlow = cFlow+1000
+        curOutputGate = curOutputGate+1000
       end
-      fluxgate.setSignalLowFlow(cFlow)
+      fluxgate.setSignalLowFlow(curOutputGate)
+    end
+
+    -- output gate toggle
+    if yPos == 8 and ( xPos == 13 or xPos == 14) then
+      if autoOutputGate == 1 then
+        autoOutputGate = 0
+      else
+        autoOutputGate = 1
+      end
+      save_config()
     end
 
     -- input gate controls
     -- 2-4 = -1000, 6-9 = -10000, 10-12,8 = -100000
     -- 17-19 = +1000, 21-23 = +10000, 25-27 = +100000
-    if yPos == 10 and autoInputGate == 0 and xPos ~= 14 and xPos ~= 15 then
+    if yPos == 10 and autoInputGate == 0 and xPos ~= 13 and xPos ~= 14 then
       if xPos >= 2 and xPos <= 4 then
         curInputGate = curInputGate-1000
       elseif xPos >= 6 and xPos <= 9 then
@@ -156,7 +169,7 @@ function buttons()
     end
 
     -- input gate toggle
-    if yPos == 10 and ( xPos == 14 or xPos == 15) then
+    if yPos == 10 and ( xPos == 13 or xPos == 14) then
       if autoInputGate == 1 then
         autoInputGate = 0
       else
@@ -238,15 +251,21 @@ function update()
     f.draw_text_lr(mon, 2, 7, 1, "Output Gate", f.format_int(fluxgate.getSignalLowFlow()) .. " rf/t", colors.white, colors.blue, colors.black)
 
     -- buttons
-    drawButtons(8)
-    f.draw_text(mon, 14, 8, "G", colors.white, colors.gray)
+    if autoOutputGate == 1 then
+      f.draw_text(mon, 13, 8, "AU", colors.white, colors.gray)
+    else
+      f.draw_text(mon, 13, 8, "MA", colors.white, colors.gray)
+      f.draw_text(mon, 16, 8, "G", colors.white, colors.gray)
+      drawButtons(8)
+    end    
+    
 
     f.draw_text_lr(mon, 2, 9, 1, "Input Gate", f.format_int(inputfluxgate.getSignalLowFlow()) .. " rf/t", colors.white, colors.blue, colors.black)
 
     if autoInputGate == 1 then
-      f.draw_text(mon, 14, 10, "AU", colors.white, colors.gray)
+      f.draw_text(mon, 13, 10, "AU", colors.white, colors.gray)
     else
-      f.draw_text(mon, 14, 10, "MA", colors.white, colors.gray)
+      f.draw_text(mon, 13, 10, "MA", colors.white, colors.gray)
       drawButtons(10)
     end
 
@@ -326,6 +345,12 @@ function update()
         inputfluxgate.setSignalLowFlow(fluxval)
       else
         inputfluxgate.setSignalLowFlow(curInputGate)
+      end
+      
+      if autoOutputGate == 1 then
+        if ri.temperature < 6000 then
+          fluxgate.setSignalLowFlow(fluxgate.getSignalLowFlow() + addOutput)
+        end
       end
     end
 
