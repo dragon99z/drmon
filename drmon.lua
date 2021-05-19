@@ -346,7 +346,7 @@ function update()
       else
         inputfluxgate.setSignalLowFlow(curInputGate)
       end
-      
+      --autoOutputMode
       if autoOutputGate == 1 then
         if ri.temperature < 6000 then
           fluxgate.setSignalLowFlow(fluxgate.getSignalLowFlow() + addOutput)
