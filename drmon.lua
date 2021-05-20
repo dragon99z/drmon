@@ -1,7 +1,6 @@
 -- modifiable variables
 local reactorSide = "back"
-local fluxgateSide = "left"
-
+local fluxgateSide = "right"
 local targetStrength = 50
 local addOutput = 500
 local maxOutputAdjustTemperature = 6000
@@ -44,6 +43,48 @@ local userStop = -1
 
 monitor = f.periphSearch("monitor")
 inputfluxgate = f.periphSearch("flux_gate")
+
+if peripheral.wrap("right") != null then
+  if peripheral.wrap("right").getType() == "flux_gate" then
+    fluxgateSide = "right"
+  elseif peripheral.wrap("right").getType() == "reactor_component" then
+    reactorSide = "right"
+  end
+end
+
+if peripheral.wrap("left") != null then
+  if peripheral.wrap("left").getType() == "flux_gate" then
+    fluxgateSide = "left"
+  elseif peripheral.wrap("left").getType() == "reactor_component" then
+    reactorSide = "left"
+  end
+end
+
+if peripheral.wrap("back") != null then
+  if peripheral.wrap("back").getType() == "flux_gate" then
+    fluxgateSide = "back"
+  elseif peripheral.wrap("back").getType() == "reactor_component" then
+    reactorSide = "back"
+  end
+end
+
+if peripheral.wrap("top") != null then
+  if peripheral.wrap("top").getType() == "flux_gate" then
+    fluxgateSide = "top"
+  elseif peripheral.wrap("top").getType() == "reactor_component" then
+    reactorSide = "top"
+  end
+end
+
+if peripheral.wrap("bottom") != null then
+  if peripheral.wrap("bottom").getType() == "flux_gate" then
+    fluxgateSide = "bottom"
+  elseif peripheral.wrap("bottom").getType() == "reactor_component" then
+    reactorSide = "bottom"
+  end
+end
+
+
 fluxgate = peripheral.wrap(fluxgateSide)
 reactor = peripheral.wrap(reactorSide)
 
