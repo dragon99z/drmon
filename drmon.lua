@@ -44,7 +44,7 @@ local userStop = -1
 monitor = f.periphSearch("monitor")
 inputfluxgate = f.periphSearch("flux_gate")
 
-if peripheral.wrap("right") != null then
+if peripheral.wrap("right") not null then
   if peripheral.wrap("right").getType() == "flux_gate" then
     fluxgateSide = "right"
   elseif peripheral.wrap("right").getType() == "reactor_component" then
@@ -52,7 +52,7 @@ if peripheral.wrap("right") != null then
   end
 end
 
-if peripheral.wrap("left") != null then
+if peripheral.wrap("left") not null then
   if peripheral.wrap("left").getType() == "flux_gate" then
     fluxgateSide = "left"
   elseif peripheral.wrap("left").getType() == "reactor_component" then
@@ -60,7 +60,7 @@ if peripheral.wrap("left") != null then
   end
 end
 
-if peripheral.wrap("back") != null then
+if peripheral.wrap("back") not null then
   if peripheral.wrap("back").getType() == "flux_gate" then
     fluxgateSide = "back"
   elseif peripheral.wrap("back").getType() == "reactor_component" then
@@ -68,7 +68,7 @@ if peripheral.wrap("back") != null then
   end
 end
 
-if peripheral.wrap("top") != null then
+if peripheral.wrap("top") not null then
   if peripheral.wrap("top").getType() == "flux_gate" then
     fluxgateSide = "top"
   elseif peripheral.wrap("top").getType() == "reactor_component" then
@@ -76,7 +76,7 @@ if peripheral.wrap("top") != null then
   end
 end
 
-if peripheral.wrap("bottom") != null then
+if peripheral.wrap("bottom") not null then
   if peripheral.wrap("bottom").getType() == "flux_gate" then
     fluxgateSide = "bottom"
   elseif peripheral.wrap("bottom").getType() == "reactor_component" then
