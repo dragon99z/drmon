@@ -1,12 +1,16 @@
 -- modifiable variables
 local reactorSide = "back"
-local fluxgateSide = "right"
+local fluxgateSide = "left"
 
 local targetStrength = 50
-local addOutput = 50
+local addOutput = 500
+local maxOutputAdjustTemperature = 6000
+local maxOutputSaveTemperature = 7500
 local maxTemperature = 8000
 local safeTemperature = 3000
 local lowestFieldPercent = 15
+
+local outputSave = true
 
 local activateOnCharged = 1
 
@@ -67,6 +71,7 @@ mon.monitor,mon.X, mon.Y = monitor, monX, monY
 function save_config()
   sw = fs.open("config.txt", "w")   
   sw.writeLine(version)
+  sw.writeLine(autoOutputGate)
   sw.writeLine(autoInputGate)
   sw.writeLine(curInputGate)
   sw.close()
@@ -76,6 +81,7 @@ end
 function load_config()
   sr = fs.open("config.txt", "r")
   version = sr.readLine()
+  autoOutputGate = tonumber(sr.readLine())
   autoInputGate = tonumber(sr.readLine())
   curInputGate = tonumber(sr.readLine())
   sr.close()
@@ -135,6 +141,7 @@ function buttons()
         curOutputGate = curOutputGate+1000
       end
       fluxgate.setSignalLowFlow(curOutputGate)
+      save_config()
     end
 
     -- output gate toggle
@@ -346,13 +353,34 @@ function update()
       else
         inputfluxgate.setSignalLowFlow(curInputGate)
       end
-      --autoOutputMode
+    end
+
+    if ri.status == "running" then
+
       if autoOutputGate == 1 then
-        if ri.temperature < 6000 then
+        
+        if ri.temperature < maxOutputAdjustTemperature then
           fluxgate.setSignalLowFlow(fluxgate.getSignalLowFlow() + addOutput)
+          outputSave = true
+        end
+        if ri.temperature > maxOutputSaveTemperature then
+          if outputSave == true then
+            fluxgate.setSignalLowFlow(ri.generationRate)
+            outputSave = false
+          end
         end
       end
+
     end
+
+    if ri.status == "stopping" or ri.status == "cooling" or ri.status == "cold" or ri.status == "offline" then
+      if autoOutputGate == 1 then
+        curOutputGate = 0
+        fluxgate.setSignalLowFlow(curOutputGate)
+        autoOutputGate = 0
+      end
+    end
+
 
     -- safeguards
     --
