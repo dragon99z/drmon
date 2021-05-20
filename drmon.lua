@@ -414,9 +414,15 @@ function update()
 
     end
 
-    if ri.status == "stopping" or ri.status == "cooling" or ri.status == "cold" or ri.status == "offline" then
+    if ri.status == "stopping" or ri.status == "cooling" then
       if autoOutputGate == 1 then
         curOutputGate = 0
+        fluxgate.setSignalLowFlow(ri.generationRate)
+      end
+    end
+
+    if ri.status == "cold" or ri.status == "offline" then
+      if autoOutputGate == 1 then
         fluxgate.setSignalLowFlow(curOutputGate)
         autoOutputGate = 0
       end
