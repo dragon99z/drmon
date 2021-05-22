@@ -290,6 +290,11 @@ function update()
     end
 
     f.draw_text_lr(mon, 2, 4, 1, "Generation", f.format_int(ri.generationRate) .. " rf/t", colors.white, colors.lime, colors.black)
+    if ri.generationRate > inputfluxgate.getSignalLowFlow() then
+      f.draw_text_lr(mon, 2, 5, 1, "Production", f.format_int(ri.generationRate - inputfluxgate.getSignalLowFlow()) .. " rf/t", colors.white, colors.green, colors.black)
+    else
+      f.draw_text_lr(mon, 2, 5, 1, "Production", f.format_int(0) .. " rf/t", colors.white, colors.green, colors.black)
+    end
 
     local tempColor = colors.red
     if ri.temperature <= 5000 then tempColor = colors.green end
