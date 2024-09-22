@@ -42,7 +42,7 @@ local finallycharged = 0
 local userStop = -1
 
 monitor = f.periphSearch("monitor")
-inputfluxgate = f.periphSearch("flux_gate")
+inputfluxgate = f.periphSearch("flow_gate")
 
 if peripheral.wrap("right") ~= null then
   if peripheral.getType("right") == "flux_gate" then
@@ -89,19 +89,19 @@ fluxgate = peripheral.wrap(fluxgateSide)
 reactor = peripheral.wrap(reactorSide)
 
 if monitor == null then
-  error("No valid monitor was found")
+  printError("No valid monitor was found")
 end
 
 if fluxgate == null then
-  error("No valid fluxgate was found")
+  printError("No valid fluxgate was found")
 end
 
 if reactor == null then
-  error("No valid reactor was found")
+  printError("No valid reactor was found")
 end
 
 if inputfluxgate == null then
-  error("No valid flux gate was found")
+  printError("No valid flux gate was found")
 end
 
 monX, monY = monitor.getSize()
@@ -257,7 +257,7 @@ function update()
     -- print out all the infos from .getReactorInfo() to term
 
     if ri == nil then
-      error("reactor has an invalid setup")
+      printError("reactor has an invalid setup")
     end
 
     for k, v in pairs (ri) do
