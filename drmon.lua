@@ -154,13 +154,14 @@ function buttons()
         reactor.chargeReactor()
         reactor.activateReactor()
         userStop = 0
-
       end
+      f.clear(mon)
     end
 
     --Match Output and Generation
     if yPos == 8 and xPos == 16 then
       fluxgate.setSignalLowFlow(ri.generationRate)
+      f.clear(mon)
     end
 
     -- output gate controls
@@ -182,6 +183,7 @@ function buttons()
         curOutputGate = curOutputGate+1000
       end
       fluxgate.setSignalLowFlow(curOutputGate)
+      f.clear(mon)
       save_config()
     end
 
@@ -192,6 +194,7 @@ function buttons()
       else
         autoOutputGate = 1
       end
+      f.clear(mon)
       save_config()
     end
 
@@ -213,6 +216,7 @@ function buttons()
         curInputGate = curInputGate+1000
       end
       inputfluxgate.setSignalLowFlow(curInputGate)
+      f.clear(mon)
       save_config()
     end
 
@@ -223,6 +227,7 @@ function buttons()
       else
         autoInputGate = 1
       end
+      f.clear(mon)
       save_config()
     end
 
@@ -250,7 +255,9 @@ end
 function update()
   while true do 
 
-    f.clear(mon)
+    term.clear()
+    term.setCursorPos(1,1)
+    --f.clear(mon)
 
     ri = reactor.getReactorInfo()
 
