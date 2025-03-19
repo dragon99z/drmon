@@ -1,33 +1,33 @@
 direct_connect = { "right", "left", "back", "top", "bottom" }
 
 function inTable(tbl, item)
-    for key, value in pairs(tbl) do
-        if value == item then return key end
-    end
-    return false
+  for key, value in pairs(tbl) do
+    if value == item then return key end
+  end
+  return false
 end
 
 -- peripheral identification
 --
 function periphSearch(type,direct)
-   local names = peripheral.getNames()
-   local i, name
-   for i, name in pairs(names) do
-      if direct then
-        if inTable(direct_connect,name) then
-          if peripheral.getType(name) == type then
-              return peripheral.wrap(name)
-          end
-        end
-      else
-        if not inTable(direct_connect,name) then
-          if peripheral.getType(name) == type then
-              return peripheral.wrap(name)
-          end
+  local names = peripheral.getNames()
+  local i, name
+  for i, name in pairs(names) do
+    if direct then
+      if inTable(direct_connect,name) then
+        if peripheral.getType(name) == type then
+          return peripheral.wrap(name)
         end
       end
-   end
-   return null
+    else
+      if not inTable(direct_connect,name) then
+        if peripheral.getType(name) == type then
+          return peripheral.wrap(name)
+        end
+      end
+    end
+  end
+  return null
 end
 
 -- formatting
