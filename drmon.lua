@@ -44,7 +44,7 @@ local userStop = -1
 monitor = f.periphSearch("monitor",false)
 inputfluxgate = f.periphSearch("flow_gate",false)
 fluxgate = f.periphSearch("flow_gate",true)
-reactor = f.periphSearch("reactor_component",true)
+reactor = f.periphSearch("draconic_reactor",true)
 
 if monitor == null then
   printError("No valid monitor was found")
