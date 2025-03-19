@@ -95,4 +95,3 @@ function clear(mon)
   mon.monitor.clear()
   mon.monitor.setCursorPos(1,1)
 end
-
