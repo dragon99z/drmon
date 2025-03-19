@@ -41,52 +41,10 @@ local emergencyTemp = false
 local finallycharged = 0
 local userStop = -1
 
-monitor = f.periphSearch("monitor")
-inputfluxgate = f.periphSearch("flow_gate")
-
-if peripheral.wrap("right") ~= null then
-  if peripheral.getType("right") == "flux_gate" or peripheral.getType("right") == "flow_gate" then
-    fluxgateSide = "right"
-  elseif peripheral.getType("right") == "reactor_component" then
-    reactorSide = "right"
-  end
-end
-
-if peripheral.wrap("left") ~= null then
-  if peripheral.getType("left") == "flux_gate" or peripheral.getType("left") == "flow_gate" then
-    fluxgateSide = "left"
-  elseif peripheral.getType("left") == "reactor_component" then
-    reactorSide = "left"
-  end
-end
-
-if peripheral.wrap("back") ~= null then
-  if peripheral.getType("back") == "flux_gate" or peripheral.getType("back") == "flow_gate" then
-    fluxgateSide = "back"
-  elseif peripheral.getType("back") == "reactor_component" then
-    reactorSide = "back"
-  end
-end
-
-if peripheral.wrap("top") ~= null then
-  if peripheral.getType("top") == "flux_gate" or peripheral.getType("top") == "flow_gate" then
-    fluxgateSide = "top"
-  elseif peripheral.getType("top") == "reactor_component" then
-    reactorSide = "top"
-  end
-end
-
-if peripheral.wrap("bottom") ~= null then
-  if peripheral.getType("bottom") == "flux_gate" or peripheral.getType("bottom") == "flow_gate" then
-    fluxgateSide = "bottom"
-  elseif peripheral.getType("bottom") == "reactor_component" then
-    reactorSide = "bottom"
-  end
-end
-
-
-fluxgate = peripheral.wrap(fluxgateSide)
-reactor = peripheral.wrap(reactorSide)
+monitor = f.periphSearch("monitor",false)
+inputfluxgate = f.periphSearch("flow_gate",false)
+fluxgate = f.periphSearch("flow_gate",true)
+reactor = f.periphSearch("reactor_component",true)
 
 if monitor == null then
   printError("No valid monitor was found")
