@@ -25,6 +25,7 @@ function periphSearch(type,direct)
               return peripheral.wrap(name)
           end
         end
+      end
    end
    return null
 end
